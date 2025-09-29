@@ -130,6 +130,14 @@
         let currentQuestionIndex = 0;
         let score = 0;
 
+        // Fisher-Yates shuffle function
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         function startQuiz() {
             currentQuestionIndex = 0;
             score = 0;
@@ -137,6 +145,8 @@
             quizHeaderEl.classList.remove('hidden');
             quizArea.classList.remove('hidden');
             nextButton.classList.add('hidden');
+            // Shuffle the entire quiz order for more variety each time
+            shuffleArray(quizData);
             showQuestion();
         }
 
@@ -152,8 +162,12 @@
             questionCounterEl.textContent = `${currentQuestionIndex + 1} / ${quizData.length}`;
             progressBarEl.style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
 
-            // Create answer buttons
-            currentQuestion.answerOptions.forEach(option => {
+            // Shuffle the answers for the current question
+            const shuffledAnswers = [...currentQuestion.answerOptions];
+            shuffleArray(shuffledAnswers);
+
+            // Create answer buttons from the shuffled list
+            shuffledAnswers.forEach(option => {
                 const button = document.createElement('button');
                 button.textContent = option.text;
                 button.classList.add('btn-option', 'w-full', 'p-4', 'border-2', 'rounded-lg', 'text-left', 'font-medium', 'text-slate-700', 'bg-slate-50', 'hover:bg-slate-100', 'hover:border-blue-400');
@@ -215,3 +229,5 @@
 
 </body>
 </html>
+
+
